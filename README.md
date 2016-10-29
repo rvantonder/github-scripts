@@ -13,3 +13,5 @@ Then as simple as:
 ```
 
 `mass-clone.sh` spins off 5 concurrent download processes by default.
+
+Use `./grab-repos.py python 10` if you just want a list of top repos.
