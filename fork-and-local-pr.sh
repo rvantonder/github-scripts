@@ -4,14 +4,26 @@ PASSWORD=`cat $HOME/github-scripts/password.txt`
 USER=`cat $HOME/github-scripts/user.txt`
 EMAIL=`cat $HOME/github-scripts/email.txt`
 
+# Branch variables
 BRANCH_NAME="test-39223578"
 COMMIT_MESSAGE="hello"
-NUM_CHANGED_FILES=`git diff --name-only | wc -l`
 
 # PR variables
 TITLE="PR"
 BODY="BODY"
 BASE="master"
+
+if [ $# -eq 0 ]; then
+    echo "./cmd <branch name> <commit message> <PR title> <PR Body>"
+    exit 1
+fi
+
+BRANCH_NAME=$1
+COMMIT_MESSAGE=$2
+TITLE=$3
+BODY=$4
+
+NUM_CHANGED_FILES=`git diff --name-only | wc -l`
 
 if [ "$NUM_CHANGED_FILES" -eq "0" ]; then
    echo "No changes for $(pwd)";
