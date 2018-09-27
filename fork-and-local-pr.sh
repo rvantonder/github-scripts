@@ -13,11 +13,13 @@ TITLE="PR"
 BODY="BODY"
 BASE="master"
 
-
 if [ "$NUM_CHANGED_FILES" -eq "0" ]; then
    echo "No changes for $(pwd)";
    exit;
 fi
+
+# copy gofmt precommit hook into this repo's .git
+cp $HOME/github-scripts/pre-commit-gofmt-hook .git/hooks
 
 TO_FORK=`git remote show origin | grep "https.*git" | python -c 's = raw_input().split("/"); print "https://@api.github.com/repos/"+s[-2]+"/"+s[-1][:-4]+"/"+"forks"'`
 

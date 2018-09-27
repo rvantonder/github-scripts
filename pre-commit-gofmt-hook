@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# pipe touched files through gofmt
+echo 'Running gofmt precommit'
+git status -s |\
+  cut -c4- |\
+  grep ".*\.go" |\
+  xargs -L 1 -I % gofmt -w %
+
+git add .
