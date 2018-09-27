@@ -4,7 +4,7 @@
 echo 'Running gofmt precommit'
 git status -s |\
   cut -c4- |\
-  grep ".*\.go" |\
+  grep "\.go$" |\
   xargs -L 1 -I % gofmt -w %
 
 git add .

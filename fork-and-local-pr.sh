@@ -40,12 +40,20 @@ curl -u "${USER}:${PASSWORD}" -d '' $TO_FORK
 
 echo "Checking out branch"
 git checkout -b $BRANCH_NAME
-git add .
-GIT_COMMITTER_NAME="${USER}" GIT_COMMITTER_EMAIL="${EMAIL}" git commit --author="${USER} <${EMAIL}>" -m $COMMIT_MESSAGE
+# add all *.go files but not vendor ones
+git status -s | cut -c4- | grep "\.go$" | grep -v "vendor" | xargs -L 1 -I % git add %
+# restore unstaged files, like vendor stuff
+git checkout -- .
+
+GIT_COMMITTER_NAME="${USER}" GIT_COMMITTER_EMAIL="${EMAIL}" git commit --author="${USER} <${EMAIL}>" -m "$COMMIT_MESSAGE"
 
 REPO_NAME=`git remote show origin | grep "https.*git" | python -c 's = raw_input().split("/"); print s[-1][:-4]'`
 echo "Pushing to $REPO_NAME"
-git push --force https://${USER}@github.com/${USER}/$REPO_NAME.git
+expect -c "
+  spawn git push --force https://${USER}@github.com/${USER}/$REPO_NAME.git
+  expect \"Password\"
+  send \"${PASSWORD}\n\"
+  expect eof"
 
 echo "Creating local PR"
 
