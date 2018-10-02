@@ -30,18 +30,29 @@ if [ "$NUM_CHANGED_FILES" -eq "0" ]; then
    exit;
 fi
 
+# GO-SPECIFIC
 # copy gofmt precommit hook into this repo's .git
-cp $HOME/github-scripts/pre-commit-gofmt-hook .git/hooks
+# cp $HOME/github-scripts/pre-commit-gofmt-hook .git/hooks
 
 TO_FORK=`git remote show origin | grep "https.*git" | python -c 's = raw_input().split("/"); print "https://@api.github.com/repos/"+s[-2]+"/"+s[-1][:-4]+"/"+"forks"'`
 
 echo "Forking $TO_FORK"
 curl -u "${USER}:${PASSWORD}" -d '' $TO_FORK
 
+# sleep, fork can take time for, e.g., HHVM
+sleep 2
+
 echo "Checking out branch"
 git checkout -b $BRANCH_NAME
+
+# GO SPECIFIC
 # add all *.go files but not vendor ones
-git status -s | cut -c4- | grep "\.go$" | grep -v "vendor" | xargs -L 1 -I % git add %
+# git status -s | cut -c4- | grep "\.go$" | grep -v "vendor" | xargs -L 1 -I % git add %
+
+# OCAML SPECIFIC
+git status -s | cut -c4- | grep "\.ml$" | xargs -L 1 -I % git add %
+git status -s | cut -c4- | grep "\.mli$" | xargs -L 1 -I % git add %
+
 # restore unstaged files, like vendor stuff
 git checkout -- .
 
