@@ -50,8 +50,12 @@ git checkout -b $BRANCH_NAME
 # git status -s | cut -c4- | grep "\.go$" | grep -v "vendor" | xargs -L 1 -I % git add %
 
 # OCAML SPECIFIC
-git status -s | cut -c4- | grep "\.ml$" | xargs -L 1 -I % git add %
-git status -s | cut -c4- | grep "\.mli$" | xargs -L 1 -I % git add %
+# git status -s | cut -c4- | grep "\.ml$" | xargs -L 1 -I % git add %
+# git status -s | cut -c4- | grep "\.mli$" | xargs -L 1 -I % git add %
+
+# DART SPECIFIC
+git status -s | cut -c4- | grep "\.dart$" | xargs -L 1 -I % git add %
+
 
 # restore unstaged files, like vendor stuff
 git checkout -- .
