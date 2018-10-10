@@ -7,4 +7,4 @@ git status -s |\
   grep "\.go$" |\
   xargs -L 1 -I % gofmt -w %
 
-git add .
+git add \*.go
