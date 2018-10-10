@@ -22,6 +22,7 @@ BRANCH_NAME=$1
 COMMIT_MESSAGE=$2
 TITLE=$3
 BODY=$4
+BASE=$5
 
 NUM_CHANGED_FILES=`git diff --name-only | wc -l`
 
@@ -32,7 +33,7 @@ fi
 
 # GO-SPECIFIC
 # copy gofmt precommit hook into this repo's .git
-# cp $HOME/github-scripts/pre-commit-gofmt-hook .git/hooks
+cp $HOME/github-scripts/pre-commit-gofmt-hook .git/hooks/pre-commit
 
 TO_FORK=`git remote show origin | grep "https.*git" | python -c 's = raw_input().split("/"); print "https://@api.github.com/repos/"+s[-2]+"/"+s[-1][:-4]+"/"+"forks"'`
 
@@ -47,14 +48,14 @@ git checkout -b $BRANCH_NAME
 
 # GO SPECIFIC
 # add all *.go files but not vendor ones
-# git status -s | cut -c4- | grep "\.go$" | grep -v "vendor" | xargs -L 1 -I % git add %
+git status -s | cut -c4- | grep "\.go$" | grep -v "vendor" | xargs -L 1 -I % git add %
 
 # OCAML SPECIFIC
 # git status -s | cut -c4- | grep "\.ml$" | xargs -L 1 -I % git add %
 # git status -s | cut -c4- | grep "\.mli$" | xargs -L 1 -I % git add %
 
 # DART SPECIFIC
-git status -s | cut -c4- | grep "\.dart$" | xargs -L 1 -I % git add %
+# git status -s | cut -c4- | grep "\.dart$" | xargs -L 1 -I % git add %
 
 
 # restore unstaged files, like vendor stuff
@@ -77,4 +78,4 @@ curl \
   -d "{ \"title\": \"${TITLE}\", \"body\": \"${BODY}\", \"head\": \"${USER}:${BRANCH_NAME}\", \"base\": \"${BASE}\" }" \
   https://api.github.com/repos/${USER}/${REPO_NAME}/pulls
 
-git checkout master
+git checkout $BASE
