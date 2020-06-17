@@ -34,7 +34,7 @@ if __name__ == '__main__':
     lang = sys.argv[1]
     number = int(sys.argv[2])
     pages = int((number / 100)+1)
-    repos = map(lambda i: popular_repos(repos_url % (lang,i)), range(1,pages+1))
+    repos = map(lambda i: popular_repos(repos_url % (lang.replace("+", "%2B"), i)), range(1,pages+1))
 
     repos = flatten(repos)
 
